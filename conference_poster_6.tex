@@ -49,7 +49,7 @@
 
 \AddToHook{shipout/background}{%
     %\put (0in,-\paperheight){\includegraphics[width=\paperwidth]{figures/faims3-orange-slide-background.png}}%
-    \put (1in,-0.148\paperheight){\includegraphics[width=\paperwidth]{figures/a0-blueback-faims.png}}%
+    \put (1in,-0.148\paperheight){\includegraphics[width=\paperwidth]{figures/a0-blueback-faims-adj.png}}%
     %\put (1in,-1213mm){\includegraphics[width=\paperwidth]{figures/a0-faimsorange-footer.png}}%
 }
 
@@ -114,7 +114,7 @@ The Field Acquired Information Management Systems (FAIMS) Project has been suppo
 
 The \textbf{FAIMS Mobile Platform} is open-source software for offline data collection. FAIMS stands for \textbf{Field Acquired Information Management Systems}. The platform was established by archaeologists at UNSW Sydney in \textbf{2012}. It is now based at Macquarie University and used by researchers from many fields in diverse situations. In 2020 the Australian Research Data Commons (ARDC) and 19 partners invested in us to rebuild the FAIMS Mobile Platform from the ground up (ARDC Platforms project doi: 10.47486/PL110). 
 
-In partnership with the Australian Research Data Commons (ARDC) and 19 research and institutional partners, the \textbf{FAIMS 3.0 Project} has been rebuilding the FAIMS Mobile app from the ground up. We are working with developers at Australian Astronomical Optics Macquarie (AAO) to customise our software stack to enable cross-platform data collection (Android, iOS and desktop), more flexible synchronisation, integration with other platforms, a DIY option for customisation, and a sleek new look.
+We have been working with developers at \textbf{Australian Astronomical Optics} Macquarie (AAO) to customise our software stack to enable cross-platform data collection (Android, iOS and desktop), more flexible synchronisation, integration with other platforms, a DIY option for customisation, and a sleek new look.
 
 The open-source tool will be released in \textbf{April 2023} under a new name: \textbf{Fieldmark}. From July \textbf{Electronic Field Notebooks Pty Ltd} will commence offering hosting services for Fieldmark.
 
@@ -132,12 +132,14 @@ The open-source tool will be released in \textbf{April 2023} under a new name: \
 
 FAIMS 3.0 allows teams to create \textbf{custom} mobile applications for \textbf{offline} field data collection--on consumer-grade hardware--without having to write or maintain code.
 
-We use \textbf{React}, \textbf{Capacitor}, and \textbf{PouchDB} to collect, edit and export data--structured, geospatial, instrument, and multimedia data--on Android, iOS, and the web. 
+We use \textbf{React}, \textbf{Capacitor}, and \textbf{PouchDB} to collect, edit and export data--structured, geospatial, instrument, and multimedia data--on \textbf{Android}, \textbf{iOS}, and the \textbf{web}. 
+
+Here we introduce the overarching process for researchers wishing to use then tool, then provide a technical overview of the software architecture.  
 
 
 
 \subsection*{Workflow}
-A FAIMS3 data-collection project \textbf{starts with a workflow}, preferably an established one. It may begin in a paper form and companion manual, a well-crafted digital package or an export from a prior project.
+A FAIMS3 data-collection project \textbf{starts with a workflow}, preferably an established one. It may be a paper form and companion manual, a well-crafted digital package or an exported dataset from a prior project.
 
 
 The field director (or delegated person) then makes the \textbf{notebook specification} on our (online) \textbf{notebook creator} to suit the data needed. (We don’t support multi-person notebook editing at present, so one and only one person should be responsible for the notebook design.) 
@@ -161,7 +163,7 @@ Once \textbf{synchronised, data collection can begin.} Users can bring tablets a
  \includegraphics[width=.32\columnwidth]{figures/Screenshot from 2022-10-13 10-54-38.png}
  \hfill\includegraphics[width=.32\columnwidth]{figures/Screenshot from 2022-10-13 10-54-28.png}
  \hfill\includegraphics[width=.32\columnwidth]{figures/Screenshot from 2022-10-13 10-56-01.png}
-\captionof{figure}{FAIMS3 beta screenshots with data from recent Macquarie University Faculty of Science and Engineering fieldwork collecting groundwater and vegetation data in NSW.}
+\captionof{figure}{FAIMS3 beta screenshots with data from recent Macquarie University Faculty of Science and Engineering fieldwork collecting groundwater and vegetation data in NSW. (Courtesy: Tess Nelson)}
 
 \end{center}
 
@@ -170,13 +172,13 @@ Once \textbf{synchronised, data collection can begin.} Users can bring tablets a
 \begin{center}
 
 \includegraphics[width=\linewidth]{figures/faims3-tech-diagram.png}
-\captionof{figure}{FAIMS3 Data flow and schematic architecture.}
+\captionof{figure}{FAIMS3 Data flow and schematic architecture. }
 \end{center}
 
 
 The FAIMS3 web-app: the app, itself, is written in Javascript (\textbf{NodeJS ← React ← Formik ← Yum, Material UI, OpenLayers, Capacitor, Moustache}). When presented on the browser, the browser receives a static site (HTML + compiled/minified JS + CSS + binary assets). The app uses PouchDB as a local, offline-capable, NoSQL datastore. It reaches out to our server to generate a JWT authentication token.
 
-Our lightweight server, \textbf{the Conductor}, handles role management and authentication. It however, does not perform data exchange. The Conductor mints tokens, will eventually be able to moderate, edit, and create notebook designs, and will handle being a wrapper for our CouchDB datastore for other clients and non-FAIMS3 users.
+Our lightweight server, \textbf{the Conductor}, handles role management and authentication. It however, does not perform data exchange. The Conductor mints tokens, which will eventually be able to moderate, edit, and create notebook designs, and will handle being a wrapper for our CouchDB datastore for other clients and non-FAIMS3 users.
 
 \textbf{PouchDB} uses the JWT token to replicate with a central \textbf{Apache CouchDB} datastore running in a Docker container. The reason we chose CouchDB/PouchDB was because full replication (copy and sync) running in an `eventual synchronisation' state (i.e. when the database can see the network again) was very exciting to us. We did not have to write an offline-capable data synchronisation protocol.
 
@@ -196,6 +198,16 @@ Once all notebook metadata and data are synchronised, a properly authenticated u
 
 % \endgroup
 
+\section*{Early adopters}
+
+Our current beta software has been deployed by research and commercial teams for pilot projects at Macquarie University, CSIRO and Aarhus University. We are learning much about the limitations and possibilities of our new architecture, deployment environment and current hardware options.
+
+\vspace{.5cm}
+\begin{center}
+    \includegraphics[width=\linewidth]{figures/Screenshot from 2022-10-13 10-58-35.png}
+    \captionof{figure}{Loren Pollitt from the Macquarie University Faculty of Science and Engineering collecting near-bore vegetation data with FAIMS3.}
+\end{center}
+
 
 
 \section*{Sustainability}
@@ -211,17 +223,15 @@ Once all notebook metadata and data are synchronised, a properly authenticated u
 %\end{center}
 % \end{wrapfigure}
 
-The FAIMS Project has a 10-year record of successful software development, deployment, client support and community-building. 
+Sustainability has been an integral consideration in the FAIMS3 rebuild. While the original FAIMS Mobile Platform is still in use 8 years after its first deployment, the cost of \textit{maintaining} the code has been too high. 
 
-Drawing on our experience with the CSIRO ON Prime Program (2016), including 70+ interviews with users and potential adopters, we carefully refined our technological priorities to meet user needs. The new system will be self-service, cross-platform and retain the core features of the old software with enhanced performance. 
 
-\subsection*{Commercialisation}
 
-With an open-source core supporting research transparency but value-adding services that can generate revenue to share the cost of long-term maintenance of the software. This is the COSS model.
+Our plan to safeguard the sustainability of FAIMS3 is through a commercial open-source (COSS) model. We remain committed to supporting research transparency with an open-source core but will offer value-adding services that can generate revenue to share the cost of long-term maintenance. 
 
-We have established a company, Electronic Field Notebooks Pty Ltd, which is currently based at the Macquarie Incubator. This program has energised and accelerated our commercialisation plans as we revisit value propositions, customer segments and refine our pitch.
+Drawing on our experience with the CSIRO ON Prime Program in 2016 (including 70+ interviews with users and potential adopters), we carefully refined our technological priorities to meet the needs of a larger user base. The key elements of the FAIMS3 rebuild (self-service and cross-platform tooling, the ability to manage multiple projects at the enterprise level) are a direct response to these requests. The core elements of the original software (flexible, offline data collection) remain.
 
-It is clear that in a marketplace of open-source and proprietary tools for research data collection and offline data collection, the specialised needs of researchers collecting field data--of their own design--in offline settings in a fashion that enables FAIR-sharing of their data, compliant with the needs of their institution and funding bodies remains unmet. 
+
 \vspace{1cm}
 \begin{center}
 \includegraphics[width=\linewidth]{figures/marketing-materials.png}
@@ -231,15 +241,11 @@ It is clear that in a marketplace of open-source and proprietary tools for resea
 % \captionof{figure}{\color{Green} Focus of FAIMS3 software design: offline, compliant research data.}
 \end{center}
 
-\section*{Early adopters}
 
-Our current beta software has been deployed by research and commercial teams for pilot projects at Macquarie University, CSIRO and Aarhus University. We are learning much about the limitations and possibilities of our new architecture.
+We have established a company, Electronic Field Notebooks Pty Ltd (EFN), which is currently based at the \textbf{Macquarie Incubator}. This program has energised and accelerated our commercialisation plans as we revisit value propositions, customer segments and refine our pitch. 
 
+It is clear that in a marketplace of open-source and proprietary tools for research data collection and offline data collection, few meet the specialised needs of researchers collecting field data--of their own design--in offline settings in a fashion that enables FAIR-sharing of their data, compliant with the needs of their institution and funding bodies. EFN will be ready with FAIMS3 to meet this need from \textbf{July 2023}.
 
-\begin{center}
-    \includegraphics[width=\linewidth]{figures/Screenshot from 2022-10-13 10-58-35.png}
-    \captionof{figure}{Macquarie University Faculty of Science and Engineering researchers collecting near-bore vegetation data.}
-\end{center}
 
 
 
